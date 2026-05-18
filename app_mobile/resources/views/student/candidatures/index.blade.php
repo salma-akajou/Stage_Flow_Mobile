@@ -3,16 +3,13 @@
 @section('title', 'Mes Candidatures - StageFlow Mobile')
 
 @section('content')
-<div class="min-h-screen bg-slate-50 pb-24" x-data="suiviCandidatures()" x-init="init()" x-cloak>
-    
-    <!-- Header -->
+<div class="min-h-screen bg-slate-50 pb-24 pt-14" x-data="suiviCandidatures()" x-init="init()" x-cloak>
     <div class="bg-white border-b border-slate-100 px-6 py-8 space-y-6">
         <div class="flex flex-col gap-2">
             <h2 class="text-2xl font-black text-slate-800 tracking-tight text-left">Mes Candidatures</h2>
             <p class="text-xs text-slate-500 text-left leading-relaxed">Suivez l'état d'avancement de vos demandes de stage en temps réel.</p>
         </div>
 
-        <!-- Stats Cards -->
         <div class="grid grid-cols-2 gap-3">
             <div class="flex flex-col bg-white border border-slate-100 shadow-sm rounded-2xl p-4 text-left">
                 <p class="text-[9px] uppercase tracking-widest text-slate-400 font-bold">Total Candidatures</p>
@@ -32,7 +29,6 @@
             </div>
         </div>
 
-        <!-- Search & Filter -->
         <div class="flex flex-col gap-3">
             <div class="relative w-full">
                 <div class="absolute inset-y-0 start-0 flex items-center ps-4 pointer-events-none">
@@ -53,10 +49,7 @@
         </div>
     </div>
 
-    <!-- Liste des Candidatures -->
     <div class="px-6 py-6 space-y-4">
-        
-        <!-- Loading -->
         <template x-if="loading">
             <div class="space-y-4">
                 <template x-for="i in 3">
@@ -65,7 +58,6 @@
             </div>
         </template>
 
-        <!-- No Results -->
         <template x-if="!loading && filteredCandidatures.length === 0">
             <div class="bg-white border-2 border-dashed border-slate-200 rounded-[2.5rem] p-12 text-center">
                 <div class="size-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -79,22 +71,17 @@
             </div>
         </template>
 
-        <!-- List Cards -->
         <div class="space-y-4">
             <template x-for="c in filteredCandidatures" :key="c.id">
                 <div class="bg-white border border-slate-100 rounded-[2.5rem] p-5 shadow-sm hover:shadow-md transition active:scale-[0.98]">
                     <div class="flex gap-4">
-                        <!-- Logo -->
                         <div class="shrink-0 size-14 bg-indigo-50 flex justify-center items-center rounded-2xl border border-indigo-100 overflow-hidden shadow-inner">
-                            <template x-if="c.offre?.entreprise?.user?.photo">
-                                <img :src="'{{ str_replace('/api', '', env('VITE_API_URL')) }}/storage/' + c.offre.entreprise.user.photo" class="size-10 object-contain">
-                            </template>
-                            <template x-if="!c.offre?.entreprise?.user?.photo">
-                                <span class="text-indigo-600 font-black text-xl" x-text="(c.offre?.entreprise?.nom_entreprise || 'S').substring(0,1)"></span>
-                            </template>
+                            <img :src="getStorageUrl(c.offre?.entreprise?.logo)" 
+                                 class="size-10 object-contain"
+                                 loading="lazy"
+                                 onerror="this.style.display='none'; this.parentElement.querySelector('.fallback').style.display='flex'">
+                            <span class="fallback text-indigo-600 font-black text-xl hidden" x-text="getCompanyInitial(c.offre?.entreprise)"></span>
                         </div>
-                        
-                        <!-- Details -->
                         <div class="grow min-w-0 text-left">
                             <h4 class="font-black text-slate-800 text-[13px] leading-tight mb-2 truncate" x-text="c.offre?.titre || 'Offre supprimée'"></h4>
                             <div class="flex items-center gap-x-2 text-[10px] text-slate-400 font-bold uppercase tracking-widest truncate">
@@ -201,6 +188,19 @@
                 interval = seconds / 60;
                 if (interval > 1) return "il y a " + Math.floor(interval) + " m";
                 return "à l'instant";
+            },
+
+            getStorageUrl(path) {
+                if (!path) return '';
+                const baseUrl = '{{ str_replace('/api', '', env('VITE_API_URL')) }}';
+                const url = `${baseUrl}/storage/${path}`;
+                console.log('Image URL:', url);
+                return url;
+            },
+
+            getCompanyInitial(entreprise) {
+                if (!entreprise || !entreprise.nom_entreprise) return 'S';
+                return entreprise.nom_entreprise.substring(0, 1).toUpperCase();
             }
         }
     }

@@ -6,8 +6,6 @@
 <div class="min-h-screen pb-24 space-y-6" 
      x-data="studentDashboard()" 
      x-init="init()">
-    
-    <!-- Skeleton Loading -->
     <template x-if="loading && !data.etudiant">
         <div class="flex flex-col items-center justify-center min-h-[60vh] space-y-4">
              <div class="size-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
@@ -16,11 +14,8 @@
     </template>
 
 
-    <!-- Main Content -->
-    <div x-show="!loading || data.etudiant" x-cloak class="space-y-6">
-        
-        <!-- Header / Banner --->
-        <section class="px-6 pt-6">
+    <div x-show="!loading || data.etudiant" x-cloak class="space-y-6 pt-14">
+        <section class="px-6">
             <div class="bg-indigo-950 rounded-[2.5rem] p-8 relative overflow-hidden shadow-2xl shadow-indigo-100/50">
                 <div class="relative z-10 space-y-4 text-left">
                     <div class="mb-6">
@@ -44,10 +39,8 @@
             </div>
         </section>
 
-        <!-- Stats Grid  -->
         <section class="px-6">
             <div class="grid grid-cols-2 gap-4">
-                <!-- Candidatures -->
                 <div class="flex flex-col bg-white border border-gray-100 shadow-sm rounded-[2rem] p-5 active:border-indigo-200 transition">
                     <div class="flex items-center justify-between mb-3">
                         <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Candidatures</p>
@@ -60,7 +53,6 @@
                         <span class="text-emerald-500 text-[8px] font-bold">+15%</span>
                     </div>
                 </div>
-                <!-- Vues -->
                 <div class="flex flex-col bg-white border border-gray-100 shadow-sm rounded-[2rem] p-5 active:border-indigo-200 transition">
                     <div class="flex items-center justify-between mb-3">
                         <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Vues Profil</p>
@@ -70,7 +62,6 @@
                     </div>
                     <div class="font-bold text-2xl text-gray-800 tracking-tight" x-text="formatNumber(data.stats?.vues)"></div>
                 </div>
-                <!-- Retenues -->
                 <div class="flex flex-col bg-white border border-gray-100 shadow-sm rounded-[2rem] p-5 active:border-indigo-200 transition">
                     <div class="flex items-center justify-between mb-3">
                         <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Retenues</p>
@@ -80,7 +71,6 @@
                     </div>
                     <div class="font-bold text-2xl text-gray-800 tracking-tight" x-text="formatNumber(data.stats?.retenues)"></div>
                 </div>
-                <!-- Favoris -->
                 <div class="flex flex-col bg-white border border-gray-100 shadow-sm rounded-[2rem] p-5 active:border-indigo-200 transition">
                     <div class="flex items-center justify-between mb-3">
                         <p class="text-[9px] font-bold text-gray-400 uppercase tracking-widest">Favoris</p>
@@ -93,7 +83,6 @@
             </div>
         </section>
 
-        <!-- Recommended Offers  -->
         <section id="recommended-offers" class="space-y-4 overflow-hidden">
             <div class="px-6 flex justify-between items-center">
                 <h3 class="text-lg font-bold text-gray-800 tracking-tight">Stages recommandés</h3>
@@ -105,12 +94,11 @@
                     <div class="min-w-[280px] group flex flex-col bg-white border border-gray-100 shadow-xl shadow-indigo-100/30 rounded-3xl p-6 transition text-left">
                         <div class="flex items-center gap-x-4 mb-4">
                             <div class="size-12 bg-gray-50 flex items-center justify-center rounded-2xl border border-gray-100 shrink-0 overflow-hidden">
-                                <template x-if="offre.entreprise?.user?.photo">
-                                    <img :src="'{{ str_replace('/api', '', env('VITE_API_URL')) }}/storage/' + (offre.entreprise.user.photo || offre.entreprise.logo)" class="size-8 object-contain">
-                                </template>
-                                <template x-if="!offre.entreprise?.user?.photo">
-                                     <span class="text-indigo-600 font-bold text-xs" x-text="(offre.entreprise?.nom_entreprise || 'S').substring(0, 1)"></span>
-                                </template>
+                                <img :src="getStorageUrl(offre.entreprise?.logo)"
+                                     class="size-8 object-contain"
+                                     loading="lazy"
+                                     onerror="this.style.display='none'; this.parentElement.querySelector('.fallback').style.display='flex'">
+                                <span class="fallback text-indigo-600 font-bold text-xs hidden" x-text="getCompanyInitial(offre.entreprise)"></span>
                             </div>
                             <div class="min-w-0">
                                 <h4 class="text-sm font-bold text-gray-800 truncate" x-text="offre.titre"></h4>
@@ -137,7 +125,6 @@
             </div>
         </section>
 
-        <!-- Recent Candidatures -->
         <section class="px-6 space-y-4">
             <div class="flex items-center justify-between">
                 <h3 class="text-lg font-bold text-gray-800 tracking-tight">Candidatures Récentes</h3>
@@ -147,12 +134,11 @@
                 <template x-for="cand in (data.candidatures_recentes || [])" :key="cand.id">
                     <div class="flex items-center gap-x-4 pb-4 border-b border-gray-50 last:border-0 last:pb-0">
                         <div class="size-10 bg-gray-50 flex-none flex items-center justify-center rounded-xl border border-gray-100 overflow-hidden">
-                             <template x-if="cand.offre?.entreprise?.user?.photo">
-                                <img :src="'{{ str_replace('/api', '', env('VITE_API_URL')) }}/storage/' + cand.offre.entreprise.user.photo" class="size-6 object-contain">
-                             </template>
-                             <template x-if="!cand.offre?.entreprise?.user?.photo">
-                                <span class="text-indigo-600 font-bold text-[10px]" x-text="(cand.offre?.entreprise?.nom_entreprise || 'S').substring(0, 1)"></span>
-                             </template>
+                            <img :src="getStorageUrl(cand.offre?.entreprise?.logo)"
+                                 class="size-6 object-contain"
+                                 loading="lazy"
+                                 onerror="this.style.display='none'; this.parentElement.querySelector('.fallback').style.display='flex'">
+                            <span class="fallback text-indigo-600 font-bold text-[10px] hidden" x-text="getCompanyInitial(cand.offre?.entreprise)"></span>
                         </div>
                         <div class="grow min-w-0 text-left">
                             <h4 class="text-xs font-bold text-gray-800 truncate" x-text="cand.offre?.titre || 'Stage'"></h4>
@@ -191,15 +177,21 @@
                 this.loading = true;
                 this.error = false;
                 try {
+                    console.log('Fetching from:', `${this.apiUrl}/student/${this.studentId}/dashboard`);
                     let response = await fetch(`${this.apiUrl}/student/${this.studentId}/dashboard`);
+                    console.log('Response status:', response.status);
                     if (!response.ok) throw new Error('Données indisponibles');
                     const json = await response.json();
+                    console.log('API Response:', json);
                     if (json.success) {
                         this.data = json.data;
+                        console.log('Stats:', this.data.stats);
+                        console.log('Recommandations:', this.data.recommandations);
                     } else {
                         throw new Error(json.message);
                     }
                 } catch (e) {
+                    console.error('Fetch error:', e);
                     this.error = true;
                     this.errorMsg = "Connexion à StageFlow impossible 📡";
                 } finally {
@@ -233,6 +225,19 @@
                 interval = seconds / 60;
                 if (interval > 1) return 'il y a ' + Math.floor(interval) + " min";
                 return "à l'instant";
+            },
+
+            getStorageUrl(path) {
+                if (!path) return '';
+                const baseUrl = '{{ str_replace('/api', '', env('VITE_API_URL')) }}';
+                const url = `${baseUrl}/storage/${path}`;
+                console.log('Image URL:', url);
+                return url;
+            },
+
+            getCompanyInitial(entreprise) {
+                if (!entreprise || !entreprise.nom_entreprise) return 'S';
+                return entreprise.nom_entreprise.substring(0, 1).toUpperCase();
             }
         }
     }
