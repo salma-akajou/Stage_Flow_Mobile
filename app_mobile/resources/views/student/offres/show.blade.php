@@ -3,9 +3,9 @@
 @section('title', ($offre['titre'] ?? 'Détail') . ' - StageFlow Mobile')
 
 @section('content')
-<div class="min-h-screen bg-slate-50 pb-32">
+<div class="min-h-screen bg-slate-50 pb-32 pt-14">
     <!-- Header -->
-    <div class="sticky top-0 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 px-6 py-4 flex items-center gap-4">
+    <div class="sticky top-14 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 px-6 py-4 flex items-center gap-4">
         <a href="{{ route('offres.index') }}" class="size-10 bg-slate-50 flex items-center justify-center rounded-xl border border-slate-100 active:scale-90 transition">
             <svg class="size-5 text-slate-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
         </a>
@@ -22,10 +22,16 @@
             </div>
 
             <div class="size-24 bg-slate-50 border border-slate-100 rounded-3xl mx-auto flex items-center justify-center mb-6 overflow-hidden shadow-inner">
-                @if(isset($offre['entreprise']['user']['photo']))
-                    <img src="{{ str_replace('/api', '', env('VITE_API_URL')) }}/storage/{{ $offre['entreprise']['user']['photo'] }}" class="size-16 object-contain">
+                @php
+                    $baseUrl = str_replace('/api', '', env('VITE_API_URL', 'http://10.0.2.2:8000/api'));
+                    $logo = $offre['entreprise']['logo'] ?? null;
+                    $initial = strtoupper(substr($offre['entreprise']['nom_entreprise'] ?? 'S', 0, 1));
+                @endphp
+                @if($logo)
+                    <img src="{{ $baseUrl }}/storage/{{ $logo }}"
+                         class="size-16 object-contain">
                 @else
-                    <span class="text-indigo-600 font-black text-3xl">{{ substr($offre['entreprise']['nom_entreprise'] ?? 'S', 0, 1) }}</span>
+                    <span class="text-indigo-600 font-black text-3xl">{{ $initial }}</span>
                 @endif
             </div>
 
@@ -150,10 +156,11 @@
             <div class="relative z-10 space-y-6">
                 <div class="flex items-center gap-4">
                     <div class="size-12 bg-white rounded-2xl flex items-center justify-center shadow-lg p-2 shrink-0">
-                        @if(isset($offre['entreprise']['user']['photo']))
-                            <img src="{{ str_replace('/api', '', env('VITE_API_URL')) }}/storage/{{ $offre['entreprise']['user']['photo'] }}" class="size-8 object-contain">
+                        @if($logo)
+                            <img src="{{ $baseUrl }}/storage/{{ $logo }}"
+                                 class="size-8 object-contain">
                         @else
-                            <span class="text-indigo-600 font-bold text-lg">{{ substr($offre['entreprise']['nom_entreprise'] ?? 'S', 0, 1) }}</span>
+                            <span class="text-indigo-600 font-bold text-lg">{{ $initial }}</span>
                         @endif
                     </div>
                     <h3 class="text-xs font-bold uppercase tracking-widest">{{ $offre['entreprise']['nom_entreprise'] ?? 'L\'ENTREPRISE' }}</h3>

@@ -3,16 +3,13 @@
 @section('title', 'Catalogue des Offres - StageFlow Mobile')
 
 @section('content')
-<div class="min-h-screen pb-24" x-data="offersCatalogue()" x-init="init()" x-cloak>
-    
-    <!-- Header -->
-    <div class="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-100 px-6 py-4 space-y-4 shadow-sm">
+<div class="min-h-screen pb-24 pt-14" x-data="offersCatalogue()" x-init="init()" x-cloak>
+    <div class="sticky top-14 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-100 px-6 py-4 space-y-4 shadow-sm">
         <div class="flex items-center justify-between">
             <h1 class="text-xl font-bold text-slate-900 tracking-tight text-left">Explorer les Offres</h1>
             <span class="py-1 px-3 bg-indigo-50 text-indigo-600 text-[10px] font-bold rounded-lg uppercase tracking-widest" x-text="count + ' offres'"></span>
         </div>
 
-        <!-- Barre de Recherche -->
         <div class="relative group">
             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <svg class="size-4 text-slate-400 group-focus-within:text-indigo-600 transition-colors" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
@@ -23,7 +20,6 @@
                    class="w-full py-3.5 pl-11 pr-4 bg-slate-50 border-transparent focus:bg-white focus:border-indigo-600 focus:ring-4 focus:ring-indigo-50 rounded-2xl text-xs font-medium placeholder:text-slate-400 transition-all outline-none">
         </div>
 
-        <!-- Filtres  -->
         <div class="flex gap-2 overflow-x-auto hide-scrollbar pb-1">
             <select x-model="filters.ville_id" class="flex-none py-2 px-4 bg-slate-100 border-none rounded-xl text-[10px] font-bold text-slate-600 outline-none focus:ring-2 focus:ring-indigo-200">
                 <option value="">Toutes les Villes</option>
@@ -41,10 +37,7 @@
         </div>
     </div>
 
-    <!-- Liste des Offres -->
     <div class="px-6 py-6 space-y-4">
-        
-        <!-- Loading skeletons -->
         <template x-if="loading">
             <div class="space-y-4">
                 <template x-for="i in 3">
@@ -62,7 +55,6 @@
             </div>
         </template>
 
-        <!-- No results -->
         <template x-if="!loading && offres.length === 0">
             <div class="flex flex-col items-center justify-center py-20 text-center space-y-4">
                 <div class="size-20 bg-slate-50 rounded-full flex items-center justify-center text-3xl">🕊️</div>
@@ -74,18 +66,16 @@
             </div>
         </template>
 
-        <!-- Offres Grid -->
         <div class="grid gap-4">
             <template x-for="offre in offres" :key="offre.id">
                 <div class="group flex flex-col bg-white border border-slate-100 shadow-xl shadow-slate-200/40 rounded-[2.5rem] p-6 active:scale-[0.98] transition-all text-left">
                     <div class="flex items-center gap-4 mb-5">
                         <div class="size-14 bg-slate-50 flex items-center justify-center rounded-2xl border border-slate-100 overflow-hidden shrink-0">
-                            <template x-if="offre.entreprise?.user?.photo">
-                                <img :src="'{{ str_replace('/api', '', env('VITE_API_URL')) }}/storage/' + offre.entreprise.user.photo" class="size-10 object-contain">
-                            </template>
-                            <template x-if="!offre.entreprise?.user?.photo">
-                                <span class="text-indigo-600 font-bold text-xl" x-text="(offre.entreprise?.nom_entreprise || 'S').substring(0,1)"></span>
-                            </template>
+                            <img :src="getStorageUrl(offre.entreprise?.logo)"
+                                 class="size-10 object-contain"
+                                 loading="lazy"
+                                 onerror="this.style.display='none'; this.parentElement.querySelector('.fallback').style.display='flex'">
+                            <span class="fallback text-indigo-600 font-bold text-xl hidden" x-text="getCompanyInitial(offre.entreprise)"></span>
                         </div>
                         <div class="min-w-0 flex-1">
                             <h4 class="text-sm font-black text-slate-900 leading-tight truncate mb-1" x-text="offre.titre"></h4>
@@ -231,6 +221,19 @@
                 interval = seconds / 60;
                 if (interval > 1) return 'il y a ' + Math.floor(interval) + " min";
                 return "à l'instant";
+            },
+
+            getStorageUrl(path) {
+                if (!path) return '';
+                const baseUrl = '{{ str_replace('/api', '', env('VITE_API_URL', 'http://10.0.2.2:8000/api')) }}';
+                const url = `${baseUrl}/storage/${path}`;
+                console.log('Image URL:', url);
+                return url;
+            },
+
+            getCompanyInitial(entreprise) {
+                if (!entreprise || !entreprise.nom_entreprise) return 'S';
+                return entreprise.nom_entreprise.substring(0, 1).toUpperCase();
             }
         }
     }
