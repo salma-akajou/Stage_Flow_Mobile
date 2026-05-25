@@ -71,12 +71,12 @@
             </div>
         </template>
 
-        <div class="space-y-4">
+        <div class="space-y-6">
             <template x-for="c in filteredCandidatures" :key="c.id">
-                <div class="bg-white border border-slate-100 rounded-[2.5rem] p-5 shadow-sm hover:shadow-md transition active:scale-[0.98]">
-                    <div class="flex gap-4">
-                        <div class="shrink-0 size-14 bg-indigo-50 flex justify-center items-center rounded-2xl border border-indigo-100 overflow-hidden shadow-inner">
-                            <img :src="getStorageUrl(c.offre?.entreprise?.logo)" 
+                <div class="bg-white border border-slate-100 rounded-[2.5rem] p-6 shadow-xl shadow-slate-200/20 text-left">
+                    <div class="flex items-center gap-4">
+                        <div class="size-14 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-center overflow-hidden shrink-0 shadow-inner">
+                            <img :src="getStorageUrl(c.offre?.entreprise?.logo)"
                                  class="size-10 object-contain"
                                  loading="lazy"
                                  onerror="this.style.display='none'; this.parentElement.querySelector('.fallback').style.display='flex'">
@@ -86,8 +86,6 @@
                             <h4 class="font-black text-slate-800 text-[13px] leading-tight mb-2 truncate" x-text="c.offre?.titre || 'Offre supprimée'"></h4>
                             <div class="flex items-center gap-x-2 text-[10px] text-slate-400 font-bold uppercase tracking-widest truncate">
                                 <span x-text="c.offre?.entreprise?.nom_entreprise || 'Inconnu'"></span>
-                                <span>•</span>
-                                <span x-text="c.offre?.ville?.nom || 'Maroc'"></span>
                             </div>
                         </div>
                     </div>
@@ -112,97 +110,4 @@
     </div>
 </div>
 
-<script>
-    function suiviCandidatures() {
-        return {
-            loading: true,
-            candidatures: [],
-            stats: { total: 0, attente: 0, accepte: 0, refuse: 0 },
-            search: '',
-            statutFilter: '',
-            apiUrl: '{{ env('VITE_API_URL') }}',
-            etudiantId: {{ $etudiantId ?? 1 }}, 
-
-            init() {
-                this.fetchData();
-            },
-
-            async fetchData() {
-                this.loading = true;
-                try {
-                    let response = await fetch(`${this.apiUrl}/student/${this.etudiantId}/candidatures`);
-                    let json = await response.json();
-                    if (json.success) {
-                        // Laravel Paginator : les données sont dans json.data.data
-                        this.candidatures = json.data.data || [];
-                        this.calculateStats(json.data.total); 
-                    }
-                } catch (e) {
-                    console.error("Erreur fetch candidatures", e);
-                } finally {
-                    this.loading = false;
-                }
-            },
-
-            calculateStats(total) {
-                this.stats.total = total || this.candidatures.length;
-                this.stats.attente = this.candidatures.filter(c => c.statut === 'En attente').length;
-                this.stats.accepte = this.candidatures.filter(c => c.statut === 'Accepté').length;
-                this.stats.refuse = this.candidatures.filter(c => c.statut === 'Refusé').length;
-            },
-
-            get filteredCandidatures() {
-                return this.candidatures.filter(c => {
-                    const matchesSearch = (c.offre?.titre || '').toLowerCase().includes(this.search.toLowerCase()) || 
-                                         (c.offre?.entreprise?.nom_entreprise || '').toLowerCase().includes(this.search.toLowerCase());
-                    const matchesStatut = this.statutFilter === '' || c.statut === this.statutFilter;
-                    return matchesSearch && matchesStatut;
-                });
-            },
-
-            getStatusClasses(s) {
-                if (s === 'En attente') return 'bg-amber-50 text-amber-600';
-                if (s === 'Accepté') return 'bg-emerald-50 text-emerald-600';
-                if (s === 'Refusé') return 'bg-rose-50 text-rose-600';
-                return 'bg-slate-50 text-slate-600';
-            },
-
-            getStatusDot(s) {
-                if (s === 'En attente') return 'bg-amber-400';
-                if (s === 'Accepté') return 'bg-emerald-500';
-                if (s === 'Refusé') return 'bg-rose-500';
-                return 'bg-slate-400';
-            },
-
-            timeSince(date) {
-                if (!date) return 'Récemment';
-                const seconds = Math.floor((new Date() - new Date(date)) / 1000);
-                let interval = seconds / 31536000;
-                if (interval > 1) return Math.floor(interval) + " ans";
-                interval = seconds / 2592000;
-                if (interval > 1) return Math.floor(interval) + " mois";
-                interval = seconds / 86400;
-                if (interval > 1) return "il y a " + Math.floor(interval) + " jours";
-                interval = seconds / 3600;
-                if (interval > 1) return "il y a " + Math.floor(interval) + " h";
-                interval = seconds / 60;
-                if (interval > 1) return "il y a " + Math.floor(interval) + " m";
-                return "à l'instant";
-            },
-
-            getStorageUrl(path) {
-                if (!path) return '';
-                const baseUrl = '{{ str_replace('/api', '', env('VITE_API_URL')) }}';
-                const url = `${baseUrl}/storage/${path}`;
-                console.log('Image URL:', url);
-                return url;
-            },
-
-            getCompanyInitial(entreprise) {
-                if (!entreprise || !entreprise.nom_entreprise) return 'S';
-                return entreprise.nom_entreprise.substring(0, 1).toUpperCase();
-            }
-        }
-    }
-</script>
 @endsection
