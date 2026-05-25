@@ -3,6 +3,19 @@ import 'preline';
 import Alpine from 'alpinejs';
 import collapse from '@alpinejs/collapse';
 
+import landingPage from './components/landingPage';
+import studentDashboard from './components/studentDashboard';
+import suiviCandidatures from './components/suiviCandidatures';
+import offersCatalogue from './components/offersCatalogue';
+
 window.Alpine = Alpine;
 Alpine.plugin(collapse);
+
+document.addEventListener('alpine:init', () => {
+    Alpine.data('landingPage', landingPage);
+    Alpine.data('studentDashboard', studentDashboard);
+    Alpine.data('suiviCandidatures', suiviCandidatures);
+    Alpine.data('offersCatalogue', offersCatalogue);
+});
+
 Alpine.start();
