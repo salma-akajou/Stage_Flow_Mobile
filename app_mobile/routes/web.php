@@ -8,6 +8,7 @@ use App\Http\Controllers\MobileCandidatureController;
 use App\Http\Controllers\MobileAuthController;
 use App\Http\Controllers\MobileFavoriController;
 
+
 // Landing Page (publique)
 Route::get('/', [MobileLandingController::class, 'index'])->name('landing');
 

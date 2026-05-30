@@ -14,6 +14,7 @@ export default (apiUrl, studentId, initialData, token) => ({
         }
     },
 
+    
     async fetchData() {
         this.loading = true;
         try {

@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
 class MobileFavoriController extends Controller
-{
-    private function apiUrl(): string
+{    private function apiUrl(): string
     {
         return env('VITE_API_URL', 'http://10.0.2.2:8000/api');
     }

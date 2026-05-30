@@ -36,6 +36,7 @@ class MobileEtudiantController extends Controller
         ]);
     }
 
+    
     public function profile($id)
     {
         $url = $this->apiUrl();
