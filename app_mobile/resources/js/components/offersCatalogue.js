@@ -1,36 +1,86 @@
-export default (apiUrl) => ({
+export default (apiUrl, studentId, authToken) => ({
     loading: true,
     offres: [],
     count: 0,
     page: 1,
     totalPages: 1,
     villes: [],
-    secteurs: ['Informatique', 'Marketing', 'Finance', 'Design', 'Management', 'Ventes'],
+    secteurs: [],
     search: '',
     filters: {
         ville_id: '',
         secteur: ''
     },
     apiUrl: apiUrl || 'http://10.0.2.2:8000/api',
+    studentId: studentId || null,
+    authToken: authToken || '',
+    favorisIds: [],
 
     init() {
         this.fetchFiltersData();
         this.fetchData();
-        
+        if (this.studentId && this.authToken) {
+            this.fetchFavorisIds();
+        }
         this.$watch('search', () => { this.page = 1; this.fetchData(); });
         this.$watch('filters.ville_id', () => { this.page = 1; this.fetchData(); });
         this.$watch('filters.secteur', () => { this.page = 1; this.fetchData(); });
     },
 
+    async fetchFavorisIds() {
+        try {
+            let response = await fetch(`${this.apiUrl}/student/${this.studentId}/favoris/ids`, {
+                headers: { 'Authorization': `Bearer ${this.authToken}`, 'Accept': 'application/json' }
+            });
+            let json = await response.json();
+            if (json.success) this.favorisIds = json.data;
+        } catch (e) {
+            console.error('Erreur fetch favoris ids', e);
+        }
+    },
+
+    isFavori(offreId) {
+        return this.favorisIds.includes(offreId);
+    },
+
+    async toggleFavori(offreId) {
+        if (!this.studentId || !this.authToken) return;
+        // optimiste
+        if (this.favorisIds.includes(offreId)) {
+            this.favorisIds = this.favorisIds.filter(id => id !== offreId);
+        } else {
+            this.favorisIds.push(offreId);
+        }
+        try {
+            await fetch(`${this.apiUrl}/student/${this.studentId}/favoris/${offreId}/toggle`, {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${this.authToken}`, 'Accept': 'application/json' }
+            });
+        } catch (e) {
+            console.error('Erreur toggle favori', e);
+            // rollback
+            await this.fetchFavorisIds();
+        }
+    },
+
     async fetchFiltersData() {
         try {
-            let response = await fetch(`${this.apiUrl}/villes`);
-            let json = await response.json();
-            if (json.success) {
-                this.villes = json.data;
+            let [villesRes, secteursRes] = await Promise.all([
+                fetch(`${this.apiUrl}/villes`),
+                fetch(`${this.apiUrl}/secteurs`)
+            ]);
+            let [villesJson, secteursJson] = await Promise.all([
+                villesRes.json(),
+                secteursRes.json()
+            ]);
+            if (villesJson.success) {
+                this.villes = villesJson.data;
+            }
+            if (secteursJson.success) {
+                this.secteurs = secteursJson.data;
             }
         } catch (e) {
-            console.error("Erreur fetch villes", e);
+            console.error("Erreur fetch filtres", e);
         }
     },
 
@@ -98,5 +148,13 @@ export default (apiUrl) => ({
     getCompanyInitial(entreprise) {
         if (!entreprise || !entreprise.nom_entreprise) return 'S';
         return entreprise.nom_entreprise.substring(0, 1).toUpperCase();
+    },
+
+    getPagesRange() {
+        let range = [];
+        for (let i = 1; i <= this.totalPages; i++) {
+            range.push(i);
+        }
+        return range;
     }
 });
