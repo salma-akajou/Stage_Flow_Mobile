@@ -25,6 +25,7 @@ Route::prefix('offres')->name('offres.')->group(function () {
     Route::get('/{id}', [MobileOffreController::class, 'show'])->name('show');
 });
 
+
 // Espace Étudiant (protégé)
 Route::prefix('student/{id}')->name('student.')->middleware('mobile.auth')->group(function () {
     Route::get('/dashboard', [MobileEtudiantController::class, 'dashboard'])->name('dashboard');

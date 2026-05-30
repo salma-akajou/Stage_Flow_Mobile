@@ -18,6 +18,7 @@
     }
 @endphp
 
+
 <div class="min-h-screen bg-slate-50 pb-32">
     <!-- Header -->
     <div class="sticky top-0 z-50 bg-white border-b border-slate-200 px-6 pt-12 pb-4 flex items-center justify-between shadow-sm">

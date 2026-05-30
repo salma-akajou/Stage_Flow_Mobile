@@ -8,6 +8,7 @@ export default (apiUrl, studentId, initialData, token) => ({
     token: token || '',
 
     init() {
+        
         if (!initialData) {
             this.fetchData();
         }
