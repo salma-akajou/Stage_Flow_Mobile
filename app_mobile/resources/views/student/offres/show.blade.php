@@ -3,9 +3,9 @@
 @section('title', ($offre['titre'] ?? 'Détail') . ' - StageFlow Mobile')
 
 @section('content')
-<div class="min-h-screen bg-slate-50 pb-32 pt-14">
+<div class="min-h-screen bg-slate-50 pb-32">
     <!-- Header -->
-    <div class="sticky top-14 z-50 bg-white/80 backdrop-blur-xl border-b border-slate-100 px-6 py-4 flex items-center gap-4">
+    <div class="sticky top-0 z-50 bg-white border-b border-slate-100 px-6 pt-12 pb-4 flex items-center gap-4 shadow-sm">
         <a href="{{ route('offres.index') }}" class="size-10 bg-slate-50 flex items-center justify-center rounded-xl border border-slate-100 active:scale-90 transition">
             <svg class="size-5 text-slate-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="m15 18-6-6 6-6"/></svg>
         </a>
@@ -168,10 +168,6 @@
                 <p class="text-[11px] text-indigo-100 leading-relaxed font-medium">
                     {{ Str::limit($offre['entreprise']['bio'] ?? 'Expert en innovation technologique.', 150) }}
                 </p>
-                <a href="#" class="inline-flex items-center gap-2 text-[10px] font-bold text-white hover:text-indigo-200 transition uppercase tracking-widest">
-                    Voir le profil
-                    <svg class="size-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3"/></svg>
-                </a>
             </div>
         </div>
     </div>
