@@ -1,4 +1,4 @@
-export default (apiUrl, etudiantId) => ({
+export default (apiUrl, etudiantId, authToken) => ({
     loading: true,
     candidatures: [],
     stats: { total: 0, attente: 0, accepte: 0, refuse: 0 },
@@ -6,6 +6,7 @@ export default (apiUrl, etudiantId) => ({
     statutFilter: '',
     apiUrl: apiUrl || 'http://10.0.2.2:8000/api',
     etudiantId: etudiantId || 1, 
+    authToken: authToken || '',
 
     init() {
         this.fetchData();
@@ -14,7 +15,12 @@ export default (apiUrl, etudiantId) => ({
     async fetchData() {
         this.loading = true;
         try {
-            let response = await fetch(`${this.apiUrl}/student/${this.etudiantId}/candidatures`);
+            let response = await fetch(`${this.apiUrl}/student/${this.etudiantId}/candidatures`, {
+                headers: {
+                    'Authorization': `Bearer ${this.authToken}`,
+                    'Accept': 'application/json'
+                }
+            });
             let json = await response.json();
             if (json.success) {
                 this.candidatures = json.data.data || [];

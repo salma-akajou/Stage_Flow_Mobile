@@ -1,13 +1,17 @@
-export default (apiUrl, studentId) => ({
-    loading: true,
-    data: {},
+export default (apiUrl, studentId, initialData, token) => ({
+    loading: initialData ? false : true,
+    data: initialData || {},
     error: false,
     errorMsg: '',
     studentId: studentId || 1, 
     apiUrl: apiUrl || 'http://10.0.2.2:8000/api',
+    token: token || '',
 
     init() {
-        this.fetchData();
+        
+        if (!initialData) {
+            this.fetchData();
+        }
     },
 
     async fetchData() {
@@ -15,7 +19,12 @@ export default (apiUrl, studentId) => ({
         this.error = false;
         try {
             console.log('Fetching from:', `${this.apiUrl}/student/${this.studentId}/dashboard`);
-            let response = await fetch(`${this.apiUrl}/student/${this.studentId}/dashboard`);
+            let response = await fetch(`${this.apiUrl}/student/${this.studentId}/dashboard`, {
+                headers: {
+                    'Authorization': `Bearer ${this.token}`,
+                    'Accept': 'application/json'
+                }
+            });
             console.log('Response status:', response.status);
             if (!response.ok) throw new Error('Données indisponibles');
             const json = await response.json();

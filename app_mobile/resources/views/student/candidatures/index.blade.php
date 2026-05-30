@@ -3,7 +3,7 @@
 @section('title', 'Mes Candidatures - StageFlow Mobile')
 
 @section('content')
-<div class="min-h-screen bg-slate-50 pb-24 pt-14" x-data="suiviCandidatures()" x-init="init()" x-cloak>
+<div class="min-h-screen bg-slate-50 pb-24 pt-16" x-data="suiviCandidatures('{{ env('VITE_API_URL') }}', {{ $etudiantId }}, '{{ session('auth_token') }}')" x-init="init()" x-cloak>
     <div class="bg-white border-b border-slate-100 px-6 py-8 space-y-6">
         <div class="flex flex-col gap-2">
             <h2 class="text-2xl font-black text-slate-800 tracking-tight text-left">Mes Candidatures</h2>
@@ -85,8 +85,9 @@
                         <div class="grow min-w-0 text-left">
                             <h4 class="font-black text-slate-800 text-[13px] leading-tight mb-2 truncate" x-text="c.offre?.titre || 'Offre supprimée'"></h4>
                             <div class="flex items-center gap-x-2 text-[10px] text-slate-400 font-bold uppercase tracking-widest truncate">
-                                <span x-text="c.offre?.entreprise?.nom_entreprise || 'Inconnu'"></span>
+                                <span x-text="(c.offre?.entreprise?.nom_entreprise || 'Inconnu') + ' • ' + (c.offre?.ville?.nom ? c.offre.ville.nom.toUpperCase() : 'TANGER')"></span>
                             </div>
+                            <p class="text-[10px] text-slate-500 mt-2 line-clamp-2 leading-relaxed lowercase text-left" x-text="c.offre?.description || ''"></p>
                         </div>
                     </div>
 

@@ -28,7 +28,7 @@
             </p>
 
             <div class="pt-6">
-                <a href="{{ route('student.dashboard', ['id' => 1]) }}" class="w-full py-4 px-8 inline-flex items-center justify-center gap-x-2 text-sm font-bold rounded-2xl bg-indigo-600 text-white shadow-2xl shadow-indigo-500/20 active:scale-95 transition-transform leading-none">
+                <a href="{{ route('login') }}" class="w-full py-4 px-8 inline-flex items-center justify-center gap-x-2 text-sm font-bold rounded-2xl bg-indigo-600 text-white shadow-2xl shadow-indigo-500/20 active:scale-95 transition-transform leading-none">
                     Trouver mon stage
                     <svg class="size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
                 </a>
@@ -144,7 +144,7 @@
     <section class="py-12 px-6">
         <div class="bg-indigo-600 rounded-[3rem] p-10 text-center shadow-2xl shadow-indigo-200 relative overflow-hidden">
             <h2 class="text-3xl font-black text-white mb-8 leading-tight relative z-10 tracking-tight text-left">Prêt à décrocher <br>votre futur stage ?</h2>
-            <a href="{{ route('student.dashboard', ['id' => 1]) }}" class="w-full py-5 bg-white text-indigo-600 font-black rounded-2xl text-xs shadow-xl active:scale-95 transition-transform relative z-10 block text-center leading-none uppercase">
+            <a href="{{ route('login') }}" class="w-full py-5 bg-white text-indigo-600 font-black rounded-2xl text-xs shadow-xl active:scale-95 transition-transform relative z-10 block text-center leading-none uppercase">
                 Créer mon compte maintenant
             </a>
             <div class="absolute -top-12 -right-12 size-40 bg-white/10 rounded-full blur-3xl"></div>
