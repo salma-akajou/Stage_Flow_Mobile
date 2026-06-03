@@ -36,8 +36,8 @@
             <div class="relative">
                 <select x-model="filters.secteur" class="w-full py-3 px-4 bg-white border border-slate-100 rounded-xl text-xs font-bold text-slate-600 focus:border-indigo-500 focus:ring-indigo-500 shadow-sm transition appearance-none border-none">
                     <option value="">Tous Secteurs</option>
-                    <template x-for="s in secteurs" :key="s">
-                        <option :value="s" x-text="s"></option>
+                    <template x-for="s in secteurs" :key="s.id">
+                        <option :value="s.id" x-text="s.nom"></option>
                     </template>
                 </select>
             </div>
@@ -91,7 +91,7 @@
                     <p class="text-[10px] text-gray-500 line-clamp-2 mb-4 leading-relaxed lowercase" x-text="offre.description"></p>
                     
                     <div class="flex flex-wrap gap-2 mb-6">
-                        <span class="py-1 px-2.5 rounded-lg text-[9px] font-bold bg-indigo-50/50 text-indigo-700" x-text="offre.secteur || 'Digital'"></span>
+                        <span class="py-1 px-2.5 rounded-lg text-[9px] font-bold bg-indigo-50/50 text-indigo-700" x-text="offre.secteur?.nom || offre.secteur || 'Digital'"></span>
                         <span class="py-1 px-2.5 rounded-lg text-[9px] font-bold bg-gray-100/50 text-gray-600" x-text="offre.duree || '6 mois'"></span>
                         <template x-if="offre.remuneration === 'Payé'">
                             <span class="inline-flex items-center py-0.5 px-2 rounded-full text-[9px] font-bold bg-green-100 text-green-800">Payé</span>
