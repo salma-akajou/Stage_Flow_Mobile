@@ -25,7 +25,7 @@
                     <div class="mb-6">
                         <h1 class="text-2xl font-bold text-white tracking-tight">Bonjour, <span x-text="data.etudiant?.user?.prenom || 'Salma'"></span> 👋</h1>
                         <p class="text-indigo-300 text-[10px] font-medium mt-1 uppercase tracking-widest leading-none">
-                            <span x-text="data.etudiant?.filiere || 'Génie Informatique'"></span> - <span x-text="data.etudiant?.etablissement || 'EMSI Casablanca'"></span>
+                            <span x-text="data.etudiant?.filiere?.nom || data.etudiant?.filiere || 'Génie Informatique'"></span> - <span x-text="data.etudiant?.etablissement?.nom || data.etudiant?.etablissement || 'EMSI Casablanca'"></span>
                         </p>
                     </div>
                     <h2 class="text-3xl font-black text-white leading-tight tracking-tight">Propulse ton potentiel avec StageFlow.</h2>
@@ -119,7 +119,7 @@
                         </div>
                         <p class="text-[11px] text-gray-600 line-clamp-2 mb-4 leading-relaxed font-medium lowercase" x-text="offre.description"></p>
                         <div class="flex flex-wrap gap-2 mb-6">
-                            <span class="py-1 px-2.5 rounded-lg text-[9px] font-bold bg-indigo-50 text-indigo-700 uppercase tracking-tighter" x-text="offre.secteur || 'Digital'"></span>
+                            <span class="py-1 px-2.5 rounded-lg text-[9px] font-bold bg-indigo-50 text-indigo-700 uppercase tracking-tighter" x-text="offre.secteur?.nom || offre.secteur || 'Digital'"></span>
                             <span class="py-1 px-2.5 rounded-lg text-[9px] font-bold bg-gray-100 text-gray-600 uppercase tracking-tighter" x-text="offre.duree || '6 mois'"></span>
                             <template x-if="offre.remuneration === 'Payé'">
                                 <span class="inline-flex items-center gap-1.5 py-0.5 px-2 rounded-full text-[9px] font-bold bg-green-100 text-green-800 uppercase tracking-tighter">Payé</span>

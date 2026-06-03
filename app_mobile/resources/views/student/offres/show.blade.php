@@ -89,7 +89,7 @@
                 </div>
                 <div class="space-y-0.5 truncate w-full">
                     <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest">Secteur</p>
-                    <p class="text-xs font-black text-slate-800 truncate">{{ $offre['secteur'] }}</p>
+                    <p class="text-xs font-black text-slate-800 truncate">{{ $offre['secteur']['nom'] ?? 'Digital' }}</p>
                 </div>
             </div>
         </div>

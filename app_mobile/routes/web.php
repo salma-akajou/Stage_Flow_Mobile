@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\MobileLandingController;
 use App\Http\Controllers\MobileOffreController;
 use App\Http\Controllers\MobileEtudiantController;
-use App\Http\Controllers\MobileCandidatureController;
+use App\Http\Controllers\MobileCandidatureController; // Suivi des candidatures
 use App\Http\Controllers\MobileAuthController;
 use App\Http\Controllers\MobileFavoriController;
 
