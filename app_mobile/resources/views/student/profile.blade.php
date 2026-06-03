@@ -63,11 +63,11 @@
             <div class="space-y-3">
                 <div class="flex justify-between items-center">
                     <span class="text-xs text-slate-500 font-medium">Établissement</span>
-                    <span class="text-xs font-bold text-slate-900">{{ $etudiant['etablissement'] ?? 'Non renseigné' }}</span>
+                    <span class="text-xs font-bold text-slate-900">{{ $etudiant['etablissement']['nom'] ?? 'Non renseigné' }}</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-xs text-slate-500 font-medium">Filière</span>
-                    <span class="text-xs font-bold text-slate-900">{{ $etudiant['filiere'] ?? 'Non renseignée' }}</span>
+                    <span class="text-xs font-bold text-slate-900">{{ $etudiant['filiere']['nom'] ?? 'Non renseignée' }}</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-xs text-slate-500 font-medium">Niveau d'études</span>

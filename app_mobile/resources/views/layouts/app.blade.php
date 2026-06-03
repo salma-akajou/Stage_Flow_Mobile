@@ -22,7 +22,7 @@
 
     @if(!Route::is('landing') && !Route::is('login'))
     @php $sid = session('student_id', 1); @endphp
-    <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-100 px-4 py-3 z-50 flex justify-between items-center shadow-2xl pb-[env(safe-area-inset-bottom)]">
+    <nav class="fixed bottom-0 left-0 right-0 bg-white/95 backdrop-blur-md border-t border-slate-100 px-4 pt-3 pb-7 z-50 flex justify-between items-center shadow-2xl">
         <a href="{{ route('student.dashboard', ['id' => $sid]) }}" class="flex flex-col items-center gap-0.5 {{ request()->routeIs('student.dashboard') ? 'text-indigo-600 font-bold' : 'text-slate-400' }}">
             <svg class="size-5 transition-transform active:scale-90" fill="currentColor" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
             <span class="text-[8px] uppercase tracking-[0.1em]">Accueil</span>
