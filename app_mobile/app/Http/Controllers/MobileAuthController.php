@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use App\Http\Requests\MobileLoginRequest;
+use App\Http\Requests\MobileRegisterRequest;
 
 class MobileAuthController extends Controller
 {
@@ -27,39 +29,33 @@ class MobileAuthController extends Controller
         }
 
         $villes = [];
+        $etablissements = [];
+        $filieres = [];
+
         try {
-            $response = Http::timeout(5)->get($this->apiUrl() . '/villes');
-            if ($response->successful()) {
-                $villes = $response->json()['data'] ?? [];
+            $villesResponse = Http::timeout(5)->get($this->apiUrl() . '/villes');
+            if ($villesResponse->successful()) {
+                $villes = $villesResponse->json()['data'] ?? [];
+            }
+
+            $etabResponse = Http::timeout(5)->get($this->apiUrl() . '/etablissements');
+            if ($etabResponse->successful()) {
+                $etablissements = $etabResponse->json()['data'] ?? [];
+            }
+
+            $filiereResponse = Http::timeout(5)->get($this->apiUrl() . '/filieres');
+            if ($filiereResponse->successful()) {
+                $filieres = $filiereResponse->json()['data'] ?? [];
             }
         } catch (\Exception $e) {
-            \Log::error('Fetch villes failed: ' . $e->getMessage());
+            \Log::error('Fetch registration metadata failed: ' . $e->getMessage());
         }
 
-        return view('auth.register', compact('villes'));
+        return view('auth.register', compact('villes', 'etablissements', 'filieres'));
     }
 
-    public function register(Request $request)
+    public function register(MobileRegisterRequest $request)
     {
-        if (empty($request->all()) && !empty($request->getContent())) {
-            parse_str($request->getContent(), $parsed);
-            $request->merge($parsed);
-        }
-
-        $request->validate([
-            'prenom'        => 'required|string|max:255',
-            'nom'           => 'required|string|max:255',
-            'email'         => 'required|email|max:255',
-            'password'      => 'required|min:6|confirmed',
-            'ville_id'      => 'required|integer',
-            'etablissement' => 'required|string',
-            'filiere'       => 'required|string|max:255',
-            'niveau_etude'  => 'required|string',
-            'bio'           => 'nullable|string',
-            'github'        => 'nullable|string',
-            'linkedin'      => 'nullable|string',
-        ]);
-
         try {
             $postData = $request->except(['_token']);
             $response = Http::timeout(10)->post($this->apiUrl() . '/auth/register', $postData);
@@ -88,18 +84,8 @@ class MobileAuthController extends Controller
 
 
 
-    public function login(Request $request)
+    public function login(MobileLoginRequest $request)
     {
-        if (empty($request->all()) && !empty($request->getContent())) {
-            parse_str($request->getContent(), $parsed);
-            $request->merge($parsed);
-        }
-
-        $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required|min:6',
-        ]);
-
         try {
             $response = Http::timeout(8)->post($this->apiUrl() . '/auth/login', [
                 'email'    => $request->email,
