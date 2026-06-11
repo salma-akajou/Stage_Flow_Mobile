@@ -26,15 +26,7 @@
     <div class="flex-1 px-6 -mt-6 relative z-10">
         <div class="bg-white rounded-[2.5rem] shadow-2xl shadow-indigo-100 p-6 space-y-5">
 
-            {{-- Erreur globale --}}
-            @if ($errors->any())
-            <div class="p-4 rounded-2xl bg-red-50 border border-red-100 flex items-start gap-3">
-                <svg class="size-5 text-red-500 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                <p class="text-xs text-red-600 font-semibold">{{ $errors->first() }}</p>
-            </div>
-            @endif
-
-            <form method="POST" action="{{ route('register.submit') }}" class="space-y-4" @submit="submitForm()">
+            <form method="POST" action="{{ route('register.submit') }}" class="space-y-4" @submit="submitForm()" novalidate>
                 @csrf
                 <input type="hidden" name="role" value="etudiant">
 
@@ -49,8 +41,11 @@
                             value="{{ old('prenom') }}"
                             placeholder="Prénom"
                             required
-                            class="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 placeholder-slate-300 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all"
+                            class="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 placeholder-slate-300 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all @error('prenom') border-red-300 @enderror"
                         >
+                        @error('prenom')
+                            <p class="text-[10px] text-red-500 font-semibold pl-1 mt-0.5">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="space-y-1.5">
                         <label for="nom" class="text-[10px] font-bold text-slate-600 uppercase tracking-widest pl-1">Nom</label>
@@ -61,8 +56,11 @@
                             value="{{ old('nom') }}"
                             placeholder="Nom"
                             required
-                            class="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 placeholder-slate-300 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all"
+                            class="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 placeholder-slate-300 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all @error('nom') border-red-300 @enderror"
                         >
+                        @error('nom')
+                            <p class="text-[10px] text-red-500 font-semibold pl-1 mt-0.5">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
 
@@ -76,8 +74,11 @@
                         value="{{ old('email') }}"
                         placeholder="votre@email.com"
                         required
-                        class="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 placeholder-slate-300 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all"
+                        class="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 placeholder-slate-300 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all @error('email') border-red-300 @enderror"
                     >
+                    @error('email')
+                        <p class="text-[10px] text-red-500 font-semibold pl-1 mt-0.5">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- Ville (Dynamic List) --}}
@@ -87,30 +88,36 @@
                         id="ville_id"
                         name="ville_id"
                         required
-                        class="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all"
+                        class="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all @error('ville_id') border-red-300 @enderror"
                     >
                         <option value="" disabled selected>Sélectionnez votre ville</option>
                         @foreach($villes as $ville)
                             <option value="{{ $ville['id'] }}" {{ old('ville_id') == $ville['id'] ? 'selected' : '' }}>{{ $ville['nom'] }}</option>
                         @endforeach
                     </select>
+                    @error('ville_id')
+                        <p class="text-[10px] text-red-500 font-semibold pl-1 mt-0.5">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- Établissement & Niveau d'études (Grid) --}}
                 <div class="grid grid-cols-2 gap-3">
                     <div class="space-y-1.5">
-                        <label for="etablissement" class="text-[10px] font-bold text-slate-600 uppercase tracking-widest pl-1">Établissement</label>
+                        <label for="etablissement_id" class="text-[10px] font-bold text-slate-600 uppercase tracking-widest pl-1">Établissement</label>
                         <select
-                            id="etablissement"
-                            name="etablissement"
+                            id="etablissement_id"
+                            name="etablissement_id"
                             required
-                            class="w-full px-3 py-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all"
+                            class="w-full px-3 py-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all @error('etablissement_id') border-red-300 @enderror"
                         >
                             <option value="" disabled selected>Établissement</option>
-                            @foreach(['Solicode', 'Faculté', 'ISTA', 'EMSI', 'ENSI', 'BTS', 'Autre'] as $etab)
-                                <option value="{{ $etab }}" {{ old('etablissement') == $etab ? 'selected' : '' }}>{{ $etab }}</option>
+                            @foreach($etablissements as $etab)
+                                <option value="{{ $etab['id'] }}" {{ old('etablissement_id') == $etab['id'] ? 'selected' : '' }}>{{ $etab['nom'] }}</option>
                             @endforeach
                         </select>
+                        @error('etablissement_id')
+                            <p class="text-[10px] text-red-500 font-semibold pl-1 mt-0.5">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="space-y-1.5">
                         <label for="niveau_etude" class="text-[10px] font-bold text-slate-600 uppercase tracking-widest pl-1">Niveau d'études</label>
@@ -118,28 +125,36 @@
                             id="niveau_etude"
                             name="niveau_etude"
                             required
-                            class="w-full px-3 py-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all"
+                            class="w-full px-3 py-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all @error('niveau_etude') border-red-300 @enderror"
                         >
                             <option value="" disabled selected>Niveau d'études</option>
-                            @foreach(['Bac+2', 'Bac+3', 'Master', 'Doctorat', 'Autre'] as $niv)
+                            @foreach(['Bac+2', 'Bac+3', 'Bac+5', 'Doctorat'] as $niv)
                                 <option value="{{ $niv }}" {{ old('niveau_etude') == $niv ? 'selected' : '' }}>{{ $niv }}</option>
                             @endforeach
                         </select>
+                        @error('niveau_etude')
+                            <p class="text-[10px] text-red-500 font-semibold pl-1 mt-0.5">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
 
                 {{-- Filière --}}
                 <div class="space-y-1.5">
-                    <label for="filiere" class="text-[10px] font-bold text-slate-600 uppercase tracking-widest pl-1">Filière / Spécialisation</label>
-                    <input
-                        type="text"
-                        id="filiere"
-                        name="filiere"
-                        value="{{ old('filiere') }}"
-                        placeholder="Développement Web"
+                    <label for="filiere_id" class="text-[10px] font-bold text-slate-600 uppercase tracking-widest pl-1">Filière / Spécialisation</label>
+                    <select
+                        id="filiere_id"
+                        name="filiere_id"
                         required
-                        class="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 placeholder-slate-300 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all"
+                        class="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all @error('filiere_id') border-red-300 @enderror"
                     >
+                        <option value="" disabled selected>Sélectionnez votre filière</option>
+                        @foreach($filieres as $filiere)
+                            <option value="{{ $filiere['id'] }}" {{ old('filiere_id') == $filiere['id'] ? 'selected' : '' }}>{{ $filiere['nom'] }}</option>
+                        @endforeach
+                    </select>
+                    @error('filiere_id')
+                        <p class="text-[10px] text-red-500 font-semibold pl-1 mt-0.5">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- Bio --}}
@@ -150,8 +165,11 @@
                         name="bio"
                         placeholder="Quelques mots sur vous..."
                         rows="2"
-                        class="w-full px-4 py-3 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 placeholder-slate-300 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all resize-none"
+                        class="w-full px-4 py-3 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 placeholder-slate-300 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all resize-none @error('bio') border-red-300 @enderror"
                     >{{ old('bio') }}</textarea>
+                    @error('bio')
+                        <p class="text-[10px] text-red-500 font-semibold pl-1 mt-0.5">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- GitHub & LinkedIn --}}
@@ -164,8 +182,11 @@
                             name="github"
                             value="{{ old('github') }}"
                             placeholder="nom_utilisateur"
-                            class="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 placeholder-slate-300 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all"
+                            class="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 placeholder-slate-300 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all @error('github') border-red-300 @enderror"
                         >
+                        @error('github')
+                            <p class="text-[10px] text-red-500 font-semibold pl-1 mt-0.5">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="space-y-1.5">
                         <label for="linkedin" class="text-[10px] font-bold text-slate-600 uppercase tracking-widest pl-1">LinkedIn</label>
@@ -175,8 +196,11 @@
                             name="linkedin"
                             value="{{ old('linkedin') }}"
                             placeholder="identifiant"
-                            class="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 placeholder-slate-300 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all"
+                            class="w-full px-4 py-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 placeholder-slate-300 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all @error('linkedin') border-red-300 @enderror"
                         >
+                        @error('linkedin')
+                            <p class="text-[10px] text-red-500 font-semibold pl-1 mt-0.5">{{ $message }}</p>
+                        @enderror
                     </div>
                 </div>
 
@@ -191,13 +215,16 @@
                                 name="password"
                                 placeholder="••••••••"
                                 required
-                                class="w-full pl-4 pr-10 py-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 placeholder-slate-300 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all"
+                                class="w-full pl-4 pr-10 py-3.5 rounded-2xl border-2 border-slate-100 bg-slate-50 text-xs font-medium text-slate-800 placeholder-slate-300 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all @error('password') border-red-300 @enderror"
                             >
                             <button type="button" @click="showPwd = !showPwd" class="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400">
                                 <svg x-show="!showPwd" class="size-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
                                 <svg x-show="showPwd" class="size-4.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/></svg>
                             </button>
                         </div>
+                        @error('password')
+                            <p class="text-[10px] text-red-500 font-semibold pl-1 mt-0.5">{{ $message }}</p>
+                        @enderror
                     </div>
                     <div class="space-y-1.5">
                         <label for="password_confirmation" class="text-[10px] font-bold text-slate-600 uppercase tracking-widest pl-1">Confirmation</label>

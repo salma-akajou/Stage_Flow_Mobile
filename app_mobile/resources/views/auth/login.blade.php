@@ -26,15 +26,8 @@
     <div class="flex-1 px-6 -mt-6 relative z-10 pb-10">
         <div class="bg-white rounded-[2.5rem] shadow-2xl shadow-indigo-100 p-6 space-y-5">
 
-            {{-- Erreur globale --}}
-            @if ($errors->any())
-            <div class="p-4 rounded-2xl bg-red-50 border border-red-100 flex items-start gap-3">
-                <svg class="size-5 text-red-500 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                <p class="text-xs text-red-600 font-semibold">{{ $errors->first() }}</p>
-            </div>
-            @endif
 
-            <form method="POST" action="/login" class="space-y-4">
+            <form method="POST" action="/login" class="space-y-4" novalidate>
                 @csrf
 
                 {{-- Email --}}
@@ -52,9 +45,12 @@
                             placeholder="votre@email.com"
                             required
                             autocomplete="email"
-                            class="w-full pl-11 pr-4 py-4 rounded-2xl border-2 border-slate-100 bg-slate-50 text-sm font-medium text-slate-800 placeholder-slate-300 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all"
+                            class="w-full pl-11 pr-4 py-4 rounded-2xl border-2 border-slate-100 bg-slate-50 text-sm font-medium text-slate-800 placeholder-slate-300 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all @error('email') border-red-300 @enderror"
                         >
                     </div>
+                    @error('email')
+                        <p class="text-[10px] text-red-500 font-semibold pl-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- Password --}}
@@ -71,13 +67,16 @@
                             placeholder="••••••••"
                             required
                             autocomplete="current-password"
-                            class="w-full pl-11 pr-12 py-4 rounded-2xl border-2 border-slate-100 bg-slate-50 text-sm font-medium text-slate-800 placeholder-slate-300 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all"
+                            class="w-full pl-11 pr-12 py-4 rounded-2xl border-2 border-slate-100 bg-slate-50 text-sm font-medium text-slate-800 placeholder-slate-300 focus:outline-none focus:border-indigo-400 focus:bg-white transition-all @error('password') border-red-300 @enderror"
                         >
                         <button type="button" @click="showPwd = !showPwd" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400">
                             <svg x-show="!showPwd" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7z"/><circle cx="12" cy="12" r="3"/></svg>
                             <svg x-show="showPwd" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/></svg>
                         </button>
                     </div>
+                    @error('password')
+                        <p class="text-[10px] text-red-500 font-semibold pl-1">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 {{-- Submit Button --}}
