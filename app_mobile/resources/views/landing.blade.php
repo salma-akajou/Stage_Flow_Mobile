@@ -6,7 +6,7 @@
 <div x-data="landingPage('{{ env('VITE_API_URL', 'http://10.0.2.2:8000/api') }}')">
     <section class="relative min-h-[70vh] flex items-center px-6 pt-16 pb-24 overflow-hidden">
         <div class="absolute inset-0 z-0">
-            <img src="https://i.pinimg.com/1200x/e0/1e/8c/e01e8c03de998fc0aa35b45fafd88cea.jpg" 
+            <img src="{{ asset('hero_bg.jpg') }}" 
                  alt="Hero background" 
                  class="w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-b from-slate-900/60 via-slate-900/40 to-slate-50"></div>
@@ -122,10 +122,10 @@
         <h2 class="text-2xl font-black text-slate-900 mb-10 text-center tracking-tight">Questions fréquentes</h2>
         <div class="space-y-3">
             <template x-for="(faq, index) in [
-                {q: 'Comment postuler ?', a: 'Uploadez votre CV et postulez en un clic sur l\'offre de votre choix.'},
+                {q: 'Puis-je postuler depuis l\'application mobile ?', a: 'Non, l\'application mobile vous permet d\'explorer les offres et de suivre vos candidatures. Pour postuler, connectez-vous sur notre site web.'},
                 {q: 'Est-ce que l\'application est gratuite ?', a: 'Oui, StageFlow est totalement gratuit pour tous les étudiants et stagiaires.'},
-                {q: 'Candidature retenue ?', a: 'Vous recevrez une notification instantanée dès qu\'un recruteur change le statut de votre candidature.'},
-                {q: 'Modifier mon profil ?', a: 'Oui, vous pouvez mettre à jour vos compétences et votre CV à tout moment depuis votre espace profil.'}
+                {q: 'Comment savoir si ma candidature est retenue ?', a: 'Vous pouvez suivre le statut de vos candidatures en temps réel dans votre onglet Suivi.'},
+                {q: 'Puis-je modifier mon profil ou mon CV sur mobile ?', a: 'Non, la mise à jour de votre profil et de votre CV se fait uniquement depuis la plateforme web.'}
             ]" :key="index">
                 <div class="border border-slate-100 rounded-[2rem] overflow-hidden shadow-sm transition-all duration-300" :class="active === index ? 'border-indigo-200 bg-indigo-50/20' : ''">
                     <button @click="active = active === index ? null : index" class="w-full py-5 px-6 flex justify-between items-center text-left">
